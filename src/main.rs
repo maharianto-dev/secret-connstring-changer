@@ -10,7 +10,7 @@ fn main() {
     let dir_crawler = DirCrawler::new(String::from(args.secret_dir()));
     match dir_crawler.validate().is_ok() {
       true => {
-
+        let _ = dir_crawler.run_crawler();
       },
       false => {
         println!("{}", dir_crawler.validate().message());

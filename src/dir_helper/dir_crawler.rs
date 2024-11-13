@@ -1,4 +1,4 @@
-use std::path::{Path, PathBuf};
+use std::{error::Error, fs, path::{Path, PathBuf}};
 
 pub struct DirCrawler {
   dir_path: PathBuf,
@@ -38,6 +38,22 @@ impl DirCrawler {
         message: String::new()
       }
     }
+  }
+
+  pub fn run_crawler(&self) -> Result<(), Box<dyn Error>> {
+    let main_dir = &self.dir_path;
+    let contents = fs::read_dir(main_dir)?;
+    for content in contents {
+      let dir_content = &content?;
+      if dir_content.file_name() == "secrets.json" {
+        println!("Found secrets.json in {}", dir_content.path().to_str().unwrap());
+      }
+      let child_dir = DirCrawler:: new(dir_content.path().to_str().unwrap().to_string());
+      if child_dir.is_dir {
+        let _ = child_dir.run_crawler();
+      }
+    }
+    Ok(())
   }
 }
 
