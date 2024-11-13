@@ -1,4 +1,4 @@
 {
-    "QA" : "Data Source=(INSTANCE=(HOST=10.247.134.12)(PORT=8333)(DB_NAME=PRDQADB));User ID=APPS;Password=Ct@sapps789#@!;Pooling=True;Max Pool Size=50;Min Pool Size=2;",
-    "PROD" : "Data Source=(INSTANCE=(HOST=10.247.134.12)(PORT=8333)(DB_NAME=PRDQADB));User ID=APPS;Password=Ct@sapps789#@!;Pooling=True;Max Pool Size=50;Min Pool Size=2;"
+    "QA" : "Data Source=(INSTANCE=(HOST=local)(PORT=8080)(DB_NAME=PRDQADB));User ID=APPS;Password=xxxxxx;Pooling=True;Max Pool Size=50;Min Pool Size=2;",
+    "PROD" : "Data Source=(INSTANCE=(HOST=local)(PORT=8080)(DB_NAME=PRDQADB));User ID=APPS;Password=xxxxxx;Pooling=True;Max Pool Size=50;Min Pool Size=2;"
 }
