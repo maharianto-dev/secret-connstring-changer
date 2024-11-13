@@ -1,5 +1,6 @@
 mod args_helper;
 mod dir_helper;
+mod content_helper;
 
 use args_helper::args::ProgramArgs;
 use dir_helper::dir_crawler::DirCrawler;
