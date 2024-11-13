@@ -56,8 +56,16 @@ impl DirCrawler {
                 // println!("Found secrets.json in {}", &file_path);
                 // potential panic here when reading file content, let it be
                 match FileWriter::new(&file_path) {
-                    Ok(filewriter) => Ok(()),
-                    Err(error) => Err(error),
+                    Ok(filewriter) => {
+                        let json_content = filewriter.file_content();
+                        for (key, value) in json_content {
+                            println!("{}: {}", key, value);
+                        }
+                        return Ok(());
+                    }
+                    Err(error) => {
+                        return Err(error);
+                    }
                 };
             }
             let child_dir = DirCrawler::new(&file_path);

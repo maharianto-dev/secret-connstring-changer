@@ -23,6 +23,10 @@ impl FileWriter {
         }
     }
 
+    pub fn file_content(&self) -> &HashMap<String, Value> {
+        &self.file_content
+    }
+
     fn read_json_from_content(_file_path: &str) -> Result<HashMap<String, Value>, Box<dyn Error>> {
         let content_str = fs::read_to_string(_file_path)?;
         let content = serde_json::from_str(content_str.trim_start_matches("\u{feff}"))?;
