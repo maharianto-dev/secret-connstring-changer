@@ -6,41 +6,15 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use serde::Deserialize;
 use serde_json::Value;
 
 use crate::error_handler::app_error::AppError;
-
-pub struct FileWriter {
-    file_path: PathBuf,
-    file_content: HashMap<String, Value>,
-}
 
 pub struct JsonConfig {
     file_exist: bool,
     content: HashMap<String, Value>,
     env: String,
-}
-
-impl FileWriter {
-    pub fn new(_file_path: &str) -> Result<Self, Box<dyn Error>> {
-        match FileWriter::read_json_from_content(_file_path) {
-            Ok(result) => Ok(Self {
-                file_path: Path::new(&_file_path).to_owned(),
-                file_content: result,
-            }),
-            Err(err) => Err(err),
-        }
-    }
-
-    pub fn file_content(&self) -> &HashMap<String, Value> {
-        &self.file_content
-    }
-
-    fn read_json_from_content(_file_path: &str) -> Result<HashMap<String, Value>, Box<dyn Error>> {
-        let content_str = fs::read_to_string(_file_path)?;
-        let content = serde_json::from_str(content_str.trim_start_matches("\u{feff}"))?;
-        Ok(content)
-    }
 }
 
 impl JsonConfig {
@@ -56,8 +30,7 @@ impl JsonConfig {
                 config_exist = true;
                 if config_exist {
                     let content_str = fs::read_to_string(dir_content.path())?;
-                    json_content =
-                        serde_json::from_str(content_str.as_str())?;
+                    json_content = serde_json::from_str(content_str.as_str())?;
                 }
             }
         }
@@ -82,5 +55,40 @@ impl JsonConfig {
 
     fn get_current_working_dir() -> std::io::Result<PathBuf> {
         env::current_dir()
+    }
+}
+
+pub struct FileWriterRaw {
+    file_path: PathBuf,
+    file_content: String,
+}
+
+impl FileWriterRaw {
+    pub fn new(_file_path: &str) -> Result<Self, Box<dyn Error>> {
+        match fs::read_to_string(_file_path) {
+            Ok(result) => Ok(Self {
+                file_path: Path::new(&_file_path).to_owned(),
+                file_content: result,
+            }),
+            Err(err) => Err(Box::new(err)),
+        }
+    }
+
+    pub fn replace_connstring(&self, new_conn_string: &String) -> Result<(), Box<dyn Error>> {
+        let mut new_content = String::new();
+        let content_lines = self.file_content.split("\n");
+        for line in content_lines {
+            let mut new_line = line.to_string();
+            if line.contains("Data Source=") {
+                let conn_string_key_value: Vec<&str> = line.split(":").collect();
+                new_line = format!("{}: {}", conn_string_key_value[0], new_conn_string);
+                if line.trim().ends_with(",") {
+                    new_line = format!("{},", new_line);
+                }
+            }
+            new_content = format!("{}{}\n", new_content, new_line);
+        }
+        fs::write(&self.file_path, new_content)?;
+        Ok(())
     }
 }
