@@ -4,6 +4,7 @@ mod content_helper;
 mod error_handler;
 
 use args_helper::args::ProgramArgs;
+use content_helper::file_writer::JsonConfig;
 use dir_helper::dir_crawler::DirCrawler;
 
 fn main() {
@@ -19,4 +20,8 @@ fn main() {
       }
     }
 
+    //sample get connection string base on env key args on config.json
+    // let json = JsonConfig::new(args.connstring_key().to_string()).unwrap();
+    // let files = json.get_config_connection_string();
+    // println!("{}", &files.unwrap());
 }

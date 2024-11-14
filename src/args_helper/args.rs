@@ -22,6 +22,10 @@ impl ProgramArgs {
     &self.secret_dir
   }
 
+  pub fn connstring_key(&self) -> &str {
+    &self.connstring_key
+  }
+
   pub fn print_args_value(&self) {
     println!("secret dir: {}", &self.secret_dir);
     println!("connstring key: {}", &self.connstring_key);
