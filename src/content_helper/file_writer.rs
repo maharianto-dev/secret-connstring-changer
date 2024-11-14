@@ -57,7 +57,7 @@ impl JsonConfig {
                 if config_exist {
                     let content_str = fs::read_to_string(dir_content.path())?;
                     json_content =
-                        serde_json::from_str(content_str.trim_start_matches("\u{feff}"))?;
+                        serde_json::from_str(content_str.as_str())?;
                 }
             }
         }
